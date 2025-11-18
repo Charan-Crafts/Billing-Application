@@ -1,7 +1,22 @@
 import Navbar from '../components/Navbar'
 import { IndianRupee, ShoppingCart } from 'lucide-react'
 import RecentOrders from '../components/RecentOrders'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { getCategories } from '../redux/slices/categorySlice.js'
+
 const Dashboard = () => {
+
+    const dispatch = useDispatch();
+    const { categories, loading, error } = useSelector((state) => state.categories);
+
+    // get the categories from the redux store only if not already loaded
+    useEffect(() => {
+        if ((!categories || categories.length === 0) && !loading) {
+            dispatch(getCategories());
+        }
+    }, [dispatch, categories, loading])
+    console.log("Categories state:", { categories, loading, error });
 
     return (
         <>
@@ -30,7 +45,7 @@ const Dashboard = () => {
                 </div>
                 <RecentOrders />
             </div>
-           
+
         </>
     )
 }
